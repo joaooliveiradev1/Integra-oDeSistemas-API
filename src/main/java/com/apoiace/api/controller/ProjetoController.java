@@ -1,6 +1,5 @@
 package com.apoiace.api.controller;
 
-
 import com.apoiace.api.models.Enums.StatusProjeto;
 import com.apoiace.api.models.Enums.TipoAssinatura;
 import com.apoiace.api.models.dtos.ProjetoRequestDTO;
@@ -14,9 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -26,18 +22,14 @@ public class ProjetoController {
 
     private final ProjetoService projetoService;
 
-
     @PostMapping
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ProjetoResponseDTO> criar(
             @Valid @RequestBody ProjetoRequestDTO dto,
-            @AuthenticationPrincipal UserDetails userDetails
+            @RequestParam String emailUsuario
     ) {
-        String emailUser = userDetails.getUsername();
-        ProjetoResponseDTO response = projetoService.criar(dto, emailUser);
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(projetoService.criar(dto, emailUsuario));
     }
-
 
     @GetMapping
     public ResponseEntity<Page<ProjetoResponseDTO>> listar(
@@ -52,12 +44,10 @@ public class ProjetoController {
         );
     }
 
-
     @GetMapping("/{id}")
     public ResponseEntity<ProjetoResponseDTO> buscarPorId(@PathVariable Long id) {
         return ResponseEntity.ok(projetoService.buscarPorId(id));
     }
-
 
     @GetMapping("/slug/{slug}")
     public ResponseEntity<ProjetoResponseDTO> buscarPorSlug(@PathVariable String slug) {
@@ -65,7 +55,6 @@ public class ProjetoController {
     }
 
     @GetMapping("/criador/{criadorId}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Page<ProjetoResponseDTO>> listarPorCriador(
             @PathVariable Long criadorId,
             @RequestParam(required = false) StatusProjeto status,
@@ -77,45 +66,33 @@ public class ProjetoController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ProjetoResponseDTO> atualizar(
             @PathVariable Long id,
             @Valid @RequestBody ProjetoUpdateDTO dto,
-            @AuthenticationPrincipal UserDetails userDetails
+            @RequestParam String emailUsuario
     ) {
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
         return ResponseEntity.ok(
-                projetoService.atualizar(id, dto, userDetails.getUsername(), isAdmin)
+                projetoService.atualizar(id, dto, emailUsuario, true)
         );
     }
 
     @PatchMapping("/{id}/status")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<ProjetoResponseDTO> atualizarStatus(
             @PathVariable Long id,
             @RequestParam StatusProjeto status,
-            @AuthenticationPrincipal UserDetails userDetails
+            @RequestParam String emailUsuario
     ) {
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
         return ResponseEntity.ok(
-                projetoService.atualizarStatus(id, status, userDetails.getUsername(), isAdmin)
+                projetoService.atualizarStatus(id, status, emailUsuario, true)
         );
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Void> deletar(
             @PathVariable Long id,
-            @AuthenticationPrincipal UserDetails userDetails
+            @RequestParam String emailUsuario
     ) {
-        boolean isAdmin = userDetails.getAuthorities().stream()
-                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-
-        projetoService.deletar(id, userDetails.getUsername(), isAdmin);
+        projetoService.deletar(id, emailUsuario, true);
         return ResponseEntity.noContent().build();
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -29,6 +30,8 @@ public class UsuarioService {
                 .filter(u -> u.getDeletedAt() == null)
                 .orElseThrow(() -> new NoSuchElementException("Usuário não encontrado"));
     }
+
+
 
     public Optional<Usuario> buscarPorEmail(String email) {
         return usuarioRepository.findByEmail(email);
@@ -69,6 +72,10 @@ public class UsuarioService {
         Usuario usuario = buscarPorId(id);
         usuario.setDeletedAt(OffsetDateTime.now());
         usuarioRepository.save(usuario);
+    }
+
+    public List<Usuario> listarTodos() {
+        return usuarioRepository.findAll();
     }
 }
 
