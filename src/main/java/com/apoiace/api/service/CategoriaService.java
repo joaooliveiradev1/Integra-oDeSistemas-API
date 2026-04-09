@@ -1,8 +1,16 @@
 package com.apoiace.api.service;
 
-public class CategoriaService {
-  
-}
+import com.apoiace.api.models.dtos.CategoriaRequestDTO;
+import com.apoiace.api.models.dtos.CategoriaResponseDTO;
+import com.apoiace.api.models.entity.Categoria;
+import com.apoiace.api.repository.CategoriaRepository;
+import jakarta.transaction.Transactional;
+import org.springframework.stereotype.Service;
+
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 @Service
 public class CategoriaService {
 

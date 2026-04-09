@@ -1,5 +1,15 @@
 package com.apoiace.api.controller;
 
+import com.apoiace.api.models.dtos.CategoriaRequestDTO;
+import com.apoiace.api.models.dtos.CategoriaResponseDTO;
+import com.apoiace.api.service.CategoriaService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
 @RestController
 @RequestMapping("/categorias")
 public class CategoriaController {

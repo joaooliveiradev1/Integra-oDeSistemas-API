@@ -1,7 +1,11 @@
 package com.apoiace.api.models.dtos;
 
-public class CategoriaResponseDTO{
-}
+import com.apoiace.api.models.entity.Categoria;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.OffsetDateTime;
+
 @Getter
 @Setter
 public class CategoriaResponseDTO {
