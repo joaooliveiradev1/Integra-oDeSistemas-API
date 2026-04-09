@@ -7,6 +7,7 @@ import com.apoiace.api.models.dtos.ProjetoResponseDTO;
 import com.apoiace.api.models.dtos.ProjetoUpdateDTO;
 import com.apoiace.api.models.entity.Categoria;
 import com.apoiace.api.models.entity.Projeto;
+import com.apoiace.api.models.entity.Usuario;
 import com.apoiace.api.repository.CategoriaRepository;
 import com.apoiace.api.repository.ProjetoRepository;
 import com.apoiace.api.repository.UsuarioRepository;

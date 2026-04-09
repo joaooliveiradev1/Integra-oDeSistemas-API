@@ -5,6 +5,7 @@ import com.apoiace.api.models.Enums.StatusProjeto;
 import com.apoiace.api.models.Enums.TipoAssinatura;
 import com.apoiace.api.models.dtos.ProjetoRequestDTO;
 import com.apoiace.api.models.dtos.ProjetoResponseDTO;
+import com.apoiace.api.models.dtos.ProjetoUpdateDTO;
 import com.apoiace.api.service.ProjetoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
