@@ -1,4 +1,71 @@
 package com.apoiace.api.service;
 
 public class CategoriaService {
+  
+}
+@Service
+public class CategoriaService {
+
+    private final CategoriaRepository categoriaRepository;
+
+    public CategoriaService(CategoriaRepository categoriaRepository) {
+        this.categoriaRepository = categoriaRepository;
+    }
+
+    public List<CategoriaResponseDTO> listarTodas() {
+        return categoriaRepository.findAllByDeletedAtIsNull()
+                .stream()
+                .map(CategoriaResponseDTO::fromEntity)
+                .toList();
+    }
+
+    public List<CategoriaResponseDTO> buscarPorNome(String nome) {
+        return categoriaRepository.findByNomeContainingIgnoreCase(nome)
+                .stream()
+                .map(CategoriaResponseDTO::fromEntity)
+                .toList();
+    }
+
+    public CategoriaResponseDTO buscarPorId(Long id) {
+        return categoriaRepository.findByIdAndDeletedAtIsNull(id)
+                .map(CategoriaResponseDTO::fromEntity)
+                .orElseThrow(() -> new NoSuchElementException("Categoria não encontrada"));
+    }
+
+    @Transactional
+    public CategoriaResponseDTO criar(CategoriaRequestDTO request) {
+        if (categoriaRepository.existsByNomeIgnoreCaseAndDeletedAtIsNull(request.getNome())) {
+            throw new IllegalArgumentException("Já existe uma categoria com esse nome");
+        }
+
+        Categoria categoria = new Categoria();
+        categoria.setNome(request.getNome());
+        categoria.setCor(request.getCor());
+
+        return CategoriaResponseDTO.fromEntity(categoriaRepository.save(categoria));
+    }
+
+    @Transactional
+    public CategoriaResponseDTO atualizar(Long id, CategoriaRequestDTO request) {
+        Categoria categoria = categoriaRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new NoSuchElementException("Categoria não encontrada"));
+
+        if (categoriaRepository.existsByNomeIgnoreCaseAndDeletedAtIsNullAndIdNot(request.getNome(), id)) {
+            throw new IllegalArgumentException("Já existe uma categoria com esse nome");
+        }
+
+        categoria.setNome(request.getNome());
+        categoria.setCor(request.getCor());
+
+        return CategoriaResponseDTO.fromEntity(categoriaRepository.save(categoria));
+    }
+
+    @Transactional
+    public void deletar(Long id) {
+        Categoria categoria = categoriaRepository.findByIdAndDeletedAtIsNull(id)
+                .orElseThrow(() -> new NoSuchElementException("Categoria não encontrada"));
+
+        categoria.setDeletedAt(OffsetDateTime.now());
+        categoriaRepository.save(categoria);
+    }
 }
