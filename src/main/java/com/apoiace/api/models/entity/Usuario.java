@@ -43,7 +43,7 @@ public class Usuario {
     private String cpf;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 20)
+    @Column(nullable = false, columnDefinition = "varchar(50)")
     private UsuarioRole role = UsuarioRole.APOIADOR;
 
     @Column(name = "telefone", length = 20)

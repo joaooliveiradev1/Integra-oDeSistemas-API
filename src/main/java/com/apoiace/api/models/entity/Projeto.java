@@ -73,14 +73,12 @@ public class Projeto {
     @Setter
     @NotNull(message = "Tipo de assinatura é obrigatório")
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo_assinatura", nullable = false,
-            columnDefinition = "ENUM('MENSAL','UNICA')")
+    @Column(nullable = false, columnDefinition = "varchar(50)")
     private TipoAssinatura tipoAssinatura;
 
     @Setter
     @Enumerated(EnumType.STRING)
-    @Column(name = "status", nullable = false,
-            columnDefinition = "ENUM('RASCUNHO','PUBLICADO','PAUSADO','ENCERRADO')")
+    @Column(nullable = false, columnDefinition = "varchar(50)")
     private StatusProjeto status = StatusProjeto.RASCUNHO;
 
     // relationships
